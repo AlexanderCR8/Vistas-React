@@ -1,4 +1,4 @@
-# servidor-quarkus-primefaces project
+# servidor-quarkus-producto-cliente-orden project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
