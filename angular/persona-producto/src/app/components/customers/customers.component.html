@@ -1,0 +1,56 @@
+
+
+
+
+<div class="card bg-light mb-3" >
+    <div class="card-header">{{titulo}}</div>
+    <div class="card-body">
+        <button class="btn btn-secondary my-2 " routerLink="/customers/form">crear</button>
+        <div class="alert alert-info" *ngIf="customers?.length==0">
+            No hay clientes en el sistema 
+        </div>
+        <form>
+            <div class="form-group form-inline">
+                Ingresa un termino de busqueda: <input class="form-control ml-2" type="text" [formControl]="filter"/>
+            </div>
+          </form>
+        <table   class="table table-hover" *ngIf="customers?.length > 0">
+            <thead>
+                <tr>
+                    <th scope="col"> id</th>
+                    <th scope="col"> Nombre</th>
+                    <th scope="col"> Apellido</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of customers$ | async | slice: (page-1) * pageSize : page * pageSize">
+                    <td><ngb-highlight [result]="customer.id | number" [term]="filter.value"></ngb-highlight></td>
+                    <td><ngb-highlight [result]="customer.name" [term]="filter.value"></ngb-highlight></td>
+                    <td><ngb-highlight [result]="customer.surname" [term]="filter.value"></ngb-highlight></td>
+                    
+                    <td>
+                        <button class="btn btn-secondary btn-sm " [routerLink]="['/customers/form', customer.id]">editar</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm " 
+                        (click)="eliminar(customer)">eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ngb-pagination
+       [(page)]="page"
+       [pageSize]="pageSize"
+       [collectionSize]="customers?.length"
+       [maxSize]="5" 
+       [boundaryLinks]="true"></ngb-pagination>
+        
+        
+    </div>
+  </div>
+
+
+
+

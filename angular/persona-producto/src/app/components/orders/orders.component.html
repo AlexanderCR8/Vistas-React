@@ -1,0 +1,88 @@
+
+<div class="card bg-light mb-3" >
+    <div class="card-header">{{titulo}}</div>
+    <div class="card-body">
+        <button class="btn btn-secondary my-2 " routerLink="/orders/form">crear</button>
+        <div class="alert alert-info" *ngIf="orders?.length==0">
+            No hay ordenes en el sistema 
+        </div>
+        <table datatable  class="table table-hover" *ngIf="orders?.length > 0">
+            <thead>
+                <tr>
+                    <th> id</th>
+                    <th> Producto</th>
+                    <th> Cliente</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders | slice: (page-1) * pageSize : page * pageSize">
+                    <td>{{order.id}}</td>
+                    <td>{{order.products.name | titlecase}}</td>
+                    <td>{{order.customers.name+" "+order.customers.surname | titlecase}}</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm " (click)="seleccionarOrden(order);openL(contenido)">editar</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm " 
+                        (click)="eliminar(order)">eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ngb-pagination
+       [(page)]="page"
+       [pageSize]="pageSize"
+       [collectionSize]="orders?.length"
+       [maxSize]="5" 
+       [boundaryLinks]="true"></ngb-pagination>
+        
+    </div>
+  </div>
+
+  <ng-template #contenido let-modal>
+      <div class="modal-header">
+           <h4 class="modal-title"> Editar orden</h4>
+           <button class="btn-close" aria-label="Close" type="button" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+           </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            
+            <div class="form-group">
+                <label for="product"> Productos</label>
+                <select   [(ngModel)]="product.id" class="form-control"
+                name="product" >
+               
+                <option *ngFor="let product of listaProducts" 
+                [ngValue]="product.id">{{product.name}}  </option>
+                
+            </select>
+
+            </div>
+            <div class="form-group">
+                <label for="id"> Cliente</label>
+                <select   [(ngModel)]="customer.id" class="form-control"
+                name="id" >
+                <option *ngFor="let customer of listaCustomers" 
+                [ngValue]="customer.id">{{customer.name+" "+customer.surname}}  </option>
+                
+            </select>
+
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="text-align: center;">
+        
+            <button  type="button" class="btn btn-info" (click)=" EditarOrden()">Actualizar </button>
+            <button  type="button" class="btn btn-success" (click)=" modal.close()">Cancelar </button>
+            
+        
+         
+      </div>
+  </ng-template>
+  
+
+

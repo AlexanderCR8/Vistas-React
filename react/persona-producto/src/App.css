@@ -1,0 +1,28 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.btn-success{
+  background-color: rgb(194, 183, 88) !important;
+}
+
+.Navbar{
+  background-color: rgb(9, 50, 87);
+}
+
+.navbar-item{
+  font-weight: bold;
+}
+.is-active{
+  font-weight: normal;
+  color: rgb(204, 29, 29) !important;
+}
+
+.foo{
+  background-color: red;
+}

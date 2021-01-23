@@ -1,0 +1,38 @@
+
+<div class="card text-dark bg-info mb-3" >
+    <div class="card-header">crear nueva Orden</div>
+    <div class="card-body">
+        <button class="btn btn-secondary my-2 " routerLink="/orders">volver</button>
+        <form>
+            
+            <div class="form-group">
+                <label for="id"> Productos</label>
+                <select   [(ngModel)]="product.id" class="form-control"
+                name="id" id="id">
+                <option  [ngValue]="undefined">-- seleccionar un producto</option>
+                <option *ngFor="let product of listaProducts" 
+                [ngValue]="product.id">{{product.name}}  </option>
+                
+            </select>
+
+            </div>
+            <div class="form-group">
+                <label for="id"> Cliente</label>
+                <select   [(ngModel)]="customer.id" class="form-control"
+                name="id" id="id">
+                <option  [ngValue]="undefined">-- seleccionar un Cliente</option>
+                <option *ngFor="let customer of listaCustomers" 
+                [ngValue]="customer.id">{{customer.name+" "+customer.surname}}  </option>
+                
+            </select>
+
+            </div>
+
+            
+            <div class="form-group">
+                <button type="button" class="btn btn-primary"
+                 (click)="order.id? editar(): crear()">{{ order.id? 'Editar': 'Crear' }}</button>
+            </div>
+        </form>
+    </div>
+</div>

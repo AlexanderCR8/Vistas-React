@@ -1,0 +1,24 @@
+<h1 mat-dialog-title> Editar Orden </h1>
+<div mat-dialog-content>
+    
+        <mat-form-field class="example-full-width">
+          <mat-label>Cliente id</mat-label>
+          <textarea matInput
+          
+          placeholder="Ex. 100 Main St">{{order.customers.id}}</textarea>
+      
+        </mat-form-field>
+        <br>
+      
+        <mat-form-field class="example-full-width">
+          <mat-label>Order id</mat-label>
+          <input matInput  [(ngModel)]="productos.id"  name="id"
+        
+           value={{order.products.id}} >
+        </mat-form-field>
+     
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="cancelar()"> Cancelar</button>
+    <button mat-button (click)="responder()"> Enviar</button>
+</div>
