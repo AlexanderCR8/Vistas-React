@@ -2,14 +2,15 @@ import React, {useEffect, useState } from 'react'
 //import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import {Modal, ModalBody,ModalFooter, ModalHeader} from 'reactstrap';
 import { getCustomers,postCustomers,putCustomers,deleteCustomers } from '../services/CustomerService'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-filter';
+import Swal from 'sweetalert2';
+import DialogCustomer from './DialogCustomer'
 //import Select from 'react-select'
 
-
+//crud de customer con props, hooks , BootstrapTable, y SweetAlert2
     export default function Customers2() {
         
       
@@ -18,7 +19,7 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
           <div>
              <button className="btn btn-primary" onClick={()=>{seleccionarCustomer(row); modalInsertar()}}><FontAwesomeIcon icon={faEdit}/></button>
                               {"  "}
-          <button className="btn btn-danger" onClick={()=>{seleccionarCustomer(row); setModalEliminarCustomer(true)}}><FontAwesomeIcon icon={faTrashAlt}/></button>
+          <button className="btn btn-danger" onClick={()=>{eliminarCust(row)}}><FontAwesomeIcon icon={faTrashAlt}/></button>
           </div>
          
         );
@@ -44,6 +45,8 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
         formatter: linkFollow,      
       }];
 
+    
+
     const [customers, setCustomers]= useState([])
     const [formCustomer, setFormCustomer]= useState({
         id:'',
@@ -52,7 +55,7 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
     })
 
     const [modalInsertarCusomer, setModalInsertarCustomer]=useState(false)
-    const [modalEliminarCustomer, setModalEliminarCustomer]=useState(false)
+
     const [tipoModal, setTipoModal]=useState('')
 
     const pagination = paginationFactory({
@@ -116,6 +119,7 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
         delete formCustomer.id;
         const post= postCustomers(formCustomer)
         post.then(response=>{
+          Swal.fire('Insertado',`Customer ${formCustomer.name}  con exito`,'success')
           modalInsertar();
           PeticionGetCustomers();
         }).catch(error=>{
@@ -126,6 +130,7 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
       const peticionPutCustomer=async()=>{
        // console.log("actualizando")
        putCustomers(formCustomer).then(response=>{
+        Swal.fire('Modificado',`Customer ${formCustomer.name} actualizado con exito`,'success')
           modalInsertar();
           PeticionGetCustomers();
         }).catch(error=>{
@@ -133,14 +138,35 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
         })
       }
 
-      const peticionDeleteCustomer=()=>{
-       // console.log("eliminando")
-        deleteCustomers(formCustomer.id).then(response=>{
-          setModalEliminarCustomer(false)
+      const peticionDeleteCustomer=(id)=>{
+        console.log(id)
+        deleteCustomers(id).then(response=>{
+         // setModalEliminarCustomer(false)
           PeticionGetCustomers();
         }).catch(error=>{
           console.log(error.message)
         })
+        
+      }
+
+      const eliminarCust=(customer)=>{
+        console.log('customer '+customer.id)
+        Swal.fire({
+          title: 'Estas seguro?',
+          text: "¡No podrás revertir esto!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, Eliminar!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            peticionDeleteCustomer(customer.id);
+            Swal.fire('Eliminado','Cliente: '+customer.name+' eliminado con exito','success') 
+           
+          }
+        })
+
       }
 
        
@@ -159,49 +185,10 @@ import filterFactory, { textFilter, numberFilter } from 'react-bootstrap-table2-
                  filter={ filterFactory()}
                   />
                 
-        
-                <Modal isOpen={modalInsertarCusomer}>
-                          <ModalHeader>
-                            <span style={{float:'right'}} onClick={()=>modalInsertar()}>x</span>
-                          </ModalHeader>
-                          <ModalBody>
-                            <div className="form-group">
-                            <label htmlFor="name">Id</label>
-                              <input className="form-control" type="text" name="id" id="id" readOnly onChange={handleChange} value={formCustomer?formCustomer.id: ''}/>
-                              <br/>
-                              <label htmlFor="name">Nombre</label>
-                              <input className="form-control" type="text" name="name" id="name" onChange={handleChange} value={formCustomer?formCustomer.name:''}/>
-                              <br/>
-                              <label htmlFor="surname">Apellido</label>
-                              <input className="form-control" type="text" name="surname" id="surname" onChange={handleChange} value={formCustomer?formCustomer.surname:''}/>
-                              <br/>
-            
-                            </div>
-                          </ModalBody>
-                          <ModalFooter>
-                            {tipoModal==='insertar'?
-                            <button className="btn btn-success" onClick={()=> peticionPostCustomer()}>
-                            Insertar
-                          </button>:<button className="btn btn-primary" onClick={()=> peticionPutCustomer()}>
-                            Actualizar
-                          </button>
-                          
-                          }
-                            <button className="btn btn-danger" onClick={()=>modalInsertar()}>
-                              Cancelar
-                            </button>
-                          </ModalFooter>
-                      </Modal>
-        
-                      <Modal isOpen={modalEliminarCustomer}>
-                        <ModalBody>
-                          Estas seguro que deseas eliminar este cliente {formCustomer && formCustomer.name}
-                        </ModalBody>
-                        <ModalFooter>
-                          <button className="btn btn-danger" onClick={()=>peticionDeleteCustomer()}> Si</button>
-                          <button className="btn btn-secundary" onClick={()=>setModalEliminarCustomer(false)}>No</button>
-                        </ModalFooter>
-                      </Modal>
+                <DialogCustomer ActivarModal={modalInsertarCusomer} CerrarModal={modalInsertar}
+                                handleChange={handleChange} formCustomer={formCustomer} 
+                                tipoModal={tipoModal} peticionPostCustomer={peticionPostCustomer}
+                                peticionPutCustomer={peticionPutCustomer}/>
                       
                 </div>
         
