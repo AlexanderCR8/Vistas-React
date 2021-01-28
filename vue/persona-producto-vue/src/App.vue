@@ -8,10 +8,10 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item :to="{name:'Home'}">Home</b-nav-item>
-        <b-nav-item  :to="{name:'Customers'}" >Clientes</b-nav-item>
-        <b-nav-item  :to="{name:'Products'}" >Productos</b-nav-item>
-        <b-nav-item  :to="{name:'Orders'}" >Ordenes</b-nav-item>
+        <b-nav-item :to="{name:'Home'}" :active='$route.name =="Home"'>Home</b-nav-item>
+        <b-nav-item  :to="{name:'Customers'}" :active='$route.name =="Customers"' >Clientes</b-nav-item>
+        <b-nav-item  :to="{name:'Products'}" :active='$route.name =="Products"'>Productos</b-nav-item>
+        <b-nav-item  :to="{name:'Orders'}" :active='$route.name =="Orders"'>Ordenes</b-nav-item>
       </b-navbar-nav>
 
     </b-collapse>
